@@ -9,6 +9,7 @@
 <h3>Agregar Nodo</h3>
 <input type="text" name="valor" @bind-value="Valor" class="form-control" placeholder="Valor del nodo" />
 <input type="text" name="posicion" @bind-value="Dato" class="form-control" placeholder="DatoX" />
+
 <button @onclick="AgregarInicio" class="btn btn-success">Agregar nodo al Inicio</button>
 <button @onclick="AgregarFinal" class="btn btn-primary">Agregar nodo al Final</button>
 <button @onclick="Agregardepuesdedatox" class="btn btn-primary">Agregar Nodo Después de dato X</button>
@@ -17,12 +18,15 @@
 <hr />
 
 <h3>Eliminar Nodo</h3>
-<input type="text" name="datoEliminar" @bind-value="Dato" class="form-control" placeholder="DatoX para eliminar" />
+<input type="text" name="datoEliminar" @bind-value="DatoEliminar" class="form-control" placeholder="DatoX para eliminar" />
+<input type="text" name="posicionEspecifica" @bind-value="Posicion" class="form-control" placeholder="Posicion Especifica" />
 <button @onclick="EliminarInicio" class="btn btn-danger">Eliminar Inicio</button>
 <button @onclick="EliminarFinal" class="btn btn-danger">Eliminar Final</button>
 <button @onclick="EliminarAntesDeDato" class="btn btn-danger">Eliminar Antes de Dato X</button>
 <button @onclick="EliminarDespuesDeDato" class="btn btn-danger">Eliminar Después de Dato X</button>
 <button @onclick="OrdenarLista" class="btn btn-warning">Ordenar Lista</button>
+<button @onclick="EliminarDatoX" class="btn btn-warning">Eliminar dato en posicion especifica</button>
+
 
 <ul class="list-group">
     @{
@@ -37,6 +41,8 @@
 
 @code {
     public string Dato;
+    public string DatoEliminar;
+    public int Posicion;
     public string Valor { get; set; }
     public LES Lista { get; set; }
 
@@ -53,8 +59,12 @@
 
     public void EliminarInicio() => Lista.EliminarInicio();
     public void EliminarFinal() => Lista.EliminarFinal();
-    public void EliminarAntesDeDato() { if (!string.IsNullOrEmpty(Dato)) Lista.EliminarAntesDe(Dato); }
-    public void EliminarDespuesDeDato() { if (!string.IsNullOrEmpty(Dato)) Lista.EliminarDespuesDe(Dato); }
+    public void EliminarAntesDeDato() { if (!string.IsNullOrEmpty(DatoEliminar)) Lista.EliminarAntesDe(DatoEliminar); }
+    public void EliminarDespuesDeDato() { if (!string.IsNullOrEmpty(DatoEliminar)) Lista.EliminarDespuesDe(DatoEliminar); }
+    
+    public void EliminarDatoX() { if (int.IsPositive(Posicion)) Lista.EliminarEnPosicionEspe(Posicion); }
+
+
     public void OrdenarLista() => Lista.OrdenarLista();
 
     Nodo CrearNodo() => new Nodo(Valor);

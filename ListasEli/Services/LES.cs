@@ -1,6 +1,5 @@
 ﻿using System.Reflection.Metadata.Ecma335;
 using ListasEli.Models;
-
 using Microsoft.AspNetCore.Components;
 
 namespace ListasEli.Services
@@ -79,23 +78,34 @@ namespace ListasEli.Services
         {
             if (EstaVacia())
             {
-                return "la lista esta llena";
+                return "La lista está vacía";
             }
+            // Caso especial: insertar antes del primer nodo
+            if (PrimerNodo.Informacion == informacion)
+            {
+                nuevoNodo.Referencia = PrimerNodo;
+                PrimerNodo = nuevoNodo;
+                return "Nodo agregado al inicio";
+            }
+
             Nodo? anterior = null;
             Nodo? actual = PrimerNodo;
+
             while (actual != null)
             {
                 if (actual.Informacion == informacion)
                 {
+                    // Enlazamos correctamente los nodos
                     anterior.Referencia = nuevoNodo;
-                    nuevoNodo = actual.Referencia;
+                    nuevoNodo.Referencia = actual;
+                    return "Nodo agregado antes del valor especificado";
                 }
                 anterior = actual;
                 actual = actual.Referencia;
             }
-            return "nodo gregado";
-
+            return "Valor no encontrado en la lista";
         }
+
         public string AgregarDespuesDePosicion(int posicion, Nodo nuevoNodo)
         {
             if (EstaVacia())
@@ -116,6 +126,7 @@ namespace ListasEli.Services
             }
             return "NodoAgregado";
         }
+
         public string AgregarAntesDePosicion(int posicion, Nodo nuevoNodo)
         {
             if (EstaVacia())
@@ -130,13 +141,12 @@ namespace ListasEli.Services
                 anterior = actual;
                 actual = actual.Referencia;
                 contador++;
-
             }
             anterior.Referencia = nuevoNodo;
             nuevoNodo.Referencia = actual;
-
             return "Nodo ha sido agregado";
         }
+
         public string EliminarInicio()
         {
             if (EstaVacia()) return "La lista está vacía";
@@ -180,6 +190,7 @@ namespace ListasEli.Services
             previo.Referencia = actual.Referencia;
             return "Nodo eliminado antes del dato";
         }
+
         public string EliminarDespuesDe(string dato)
         {
             Nodo actual = PrimerNodo;
@@ -192,6 +203,7 @@ namespace ListasEli.Services
             if (actual.Referencia == null) UltimoNodo = actual;
             return "Nodo eliminado después del dato";
         }
+
         public string EliminarEnPosicion(int posicion)
         {
             if (EstaVacia() || posicion < 0) return "Posición inválida";
@@ -232,6 +244,32 @@ namespace ListasEli.Services
             } while (intercambiado);
         }
 
+        public string EliminarEnPosicionEspe(int posicion)
+        {
+            if (EstaVacia()) return "La lista está vacía.";
+            if (posicion < 0) return "Posición inválida.";
+
+            if (posicion == 0) return EliminarInicio(); // Si es la primera posición
+
+            Nodo actual = PrimerNodo;
+            Nodo previo = null;
+            int index = 0;
+
+            while (actual != null && index < posicion)
+            {
+                previo = actual;
+                actual = actual.Referencia;
+                index++;
+            }
+
+            if (actual == null) return "Posición fuera de rango.";
+
+            previo.Referencia = actual.Referencia; // Saltar el nodo a eliminar
+
+            if (actual == UltimoNodo) UltimoNodo = previo; // Si era el último, actualizar
+
+            return "Nodo eliminado en la posición " + posicion;
+        }
 
 
     }
